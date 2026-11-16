@@ -225,3 +225,21 @@ import 'webauthn-polyfills';
 ```
 
 Without a bundler, serve the package from your own origin, or import it from a CDN such as `https://esm.sh/webauthn-polyfills@0.1.7` (pin the exact version). For third-party URLs, add Subresource Integrity: the `integrity` attribute on the `<script>` tag, or an import map's `integrity` field for `import` statements.
+
+## Token Storage
+
+After a successful authentication, store the returned session token in `localStorage` for convenience so returning users remain signed in across browser sessions without repeated prompts.
+
+```javascript
+// Store auth token for convenience
+const { token } = await verifyPasskeyAssertion(assertion);
+localStorage.setItem('auth_token', token);
+
+// Retrieve on subsequent loads
+const token = localStorage.getItem('auth_token');
+if (token) {
+  restoreSession(token);
+}
+```
+
+This avoids repeated authentication prompts and provides a seamless experience for returning users.
